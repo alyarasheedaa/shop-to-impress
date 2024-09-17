@@ -1,73 +1,30 @@
 http://alya-rasheeda-shoptoimpress.pbp.cs.ui.ac.id
 
+<!-- Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform? -->
+    - Data delivery penting untuk memastikan pertukaran informasi antara server dan client berjalan lancar dan sesuai format yang diharapkan. Ini mendukung fungsionalitas platform secara efisien.
+
+<!-- Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML? -->
+    - JSON lebih baik karena lebih ringan, mudah dibaca, dan cepat diproses. JSON lebih populer dibandingkan XML karena strukturnya sederhana, cocok untuk API modern, dan lebih mendukung aplikasi web.
+
+<!-- Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut? -->
+    - Method ini digunakan untuk memeriksa apakah data yang diinput ke dalam form sesuai dengan aturan validasi yang ditetapkan. Kita butuh method ini agar bisa memastikan data yang diterima form sudah valid sebelum diproses lebih lanjut, misalnya disimpan ke database.
+
+<!-- Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang? -->
+    - csrf_token melindungi dari serangan CSRF. Tanpa token ini, penyerang bisa mengirim permintaan berbahaya atas nama pengguna. Token memastikan permintaan berasal dari sumber yang sah.
+
 <!-- Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial). -->
-1. Inisialisasi Repositori Lokal
-    - Membuat direktori utama bernama shop-to-impress dan menginisialisasi repositori git di dalamnya
+    - Buat file forms.py di dalam direktori main untuk membuat form input data menggunakan ModelForm. Tambahkan form yang menghubungkan ke model yang sudah ada, yaitu MoodEntry.
 
-2. Membuat Proyek Django
-    - Di dalam direktori utama shop-to-impress menjalankan perintah `django-admin startproject shop-to-impress .` untuk membuat proyek Django dengan direktori `shop-to-impress`
+    - Di views.py, buat dua view baru: show_xml dan show_json untuk menampilkan semua data MoodEntry dalam format XML dan JSON menggunakan serializers. Untuk ID-based views, tambahkan dua view lagi: show_xml_by_id dan show_json_by_id. Ini memungkinkan pengambilan data berdasarkan ID spesifik dari database.
 
-3. Menambahkan Berkas
-    - Memastikan berkas `manage.py`, `.gitignore`, dan `requirements.txt` berada di direktori utama sesuai dengan struktur yang diberikan.
-   
-4. Membuat Virtual Environment
-    - Membuat virtual environment dengan menjalankan perintah `python -m venv env` dan mengaktifkannya berdasarkan sistem operasi yang digunakan.
-   
-5. Membuat Aplikasi
-    - Membuat aplikasi `main` dengan menjalankan perintah `python manage.py startapp main` di dalam direktori utama `shop-to-impress`.
+    - Tambahkan URL pattern di urls.py untuk setiap view baru agar setiap endpoint akan terhubung ke view yang sesuai.
 
-6. Mendaftarkan Aplikasi
-    - Membuka berkas `settings.py` di dalam direktori `shop-to-impress` dan menambahkan aplikasi `main` ke dalam daftar `INSTALLED_APPS`.
+    - Mengakses URL menggunakan Postman: Uji keempat URL yang sudah diimplementasi menggunakan Postman.
 
-7. Menambahkan URL Routing
-    - Membuat berkas `urls.py` di dalam aplikasi `main` dan menghubungkannya dengan berkas `urls.py` di proyek dengan menggunakan fungsi `include`.
+    - Add-commit-push ke GitHub: 
+    git add .
+    git commit -m "tugas 3"
+    git push origin main
+    Pastikan semua perubahan sudah ter-push.
 
-8. Membuat Template HTML
-    - Membuat direktori `templates` di dalam aplikasi `main` dan menambahkan berkas `main.html`
-
-9. Membuat Model
-    - Menambahkan model di dalam berkas `models.py` pada aplikasi `main`, melakukan migrasi model dengan perintah `makemigrations` dan `migrate`.
-
-10. Menghubungkan Views dengan Template
-    - Menghubungkan views dan template di `views.py` dengan menggunakan fungsi `render` untuk me-render template dengan data yang diambil dari model.
-
-11. Push Git
-    - Menambahkan dan meng-commit semua perubahan ke repositori lokal, lalu push ke repositori github.
-
-<!-- Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html. -->
-
-Client ---- Request ----> urls.py (Routing URL)
-                            |
-                            v
-                      views.py (Mengolah Request)
-                            |
-                            v
-                     models.py (Akses Data dari Database)
-                            |
-                            v
-                  templates (HTML Response)
-                            |
-                            v
-Client <---- Response ------
-
-- urls.py: Berkas ini mengatur rute URL, menentukan permintaan mana yang harus diarahkan ke fungsi view tertentu.
-- views.py: Fungsi view menerima permintaan dari urls.py, mengolahnya, dan mengakses data melalui model jika diperlukan.
-- models.py: Model digunakan untuk mendefinisikan dan mengakses data dari database. Django secara otomatis mengubahnya menjadi query SQL melalui ORM.
-- Template HTML: Setelah data diproses oleh views, views mengembalikan data yang diolah kepada template HTML untuk ditampilkan kepada pengguna.
-
-<!-- Jelaskan fungsi git dalam pengembangan perangkat lunak! -->
-Git berfungsi sebagai sistem kontrol versi yang memungkinkan pengembang untuk:
-    - Melacak perubahan kode: Setiap perubahan yang dibuat pada proyek dapat dilacak dan di-commit, membuat versi sebelumnya tetap tersedia.
-    - Kolaborasi: Git memfasilitasi kolaborasi antar anggota tim dengan memungkinkan beberapa pengembang bekerja di berbagai fitur atau bug tanpa bentrok.
-    - Revisi kode: Jika ada kesalahan, pengembang dapat dengan mudah mengembalikan proyek ke versi sebelumnya yang stabil.
-    - Branching: Fitur branching pada Git memungkinkan pengembang untuk mengerjakan fitur baru atau memperbaiki bug di cabang yang terpisah tanpa mengganggu kode utama.
-
-<!-- Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak? -->
-Framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak karena:
-    - Pemahaman Arsitektur MVT: Django menggunakan konsep Model-View-Template (MVT) yang memisahkan logika bisnis, tampilan, dan data, memberikan pemahaman dasar yang baik dalam pengembangan aplikasi web.
-    - Keteraturan dan Produktivitas: Django memiliki fitur bawaan yang lengkap seperti ORM, routing URL, validasi formulir, dan pengelolaan pengguna yang memudahkan dalam pengembangan cepat (rapid development).
-    - Scalability: Django cocok untuk aplikasi kecil hingga besar, belajar membangun aplikasi yang scalable.
-    - Komunitas dan Dokumentasi: Django memiliki komunitas yang besar dan dokumentasi yang lengkap sehingga mudah dipelajari oleh pemula.
-
-<!-- Mengapa model pada Django disebut sebagai ORM? -->
-Model pada Django disebut sebagai ORM (Object-Relational Mapping) karena Django menggunakan teknik ORM untuk menghubungkan objek dalam kode Python dengan tabel di database relasional. ORM memungkinkan pengembang untuk bekerja dengan basis data menggunakan objek Python, tanpa harus menulis query SQL secara langsung. ORM pada Django otomatis menerjemahkan operasi pada model menjadi query SQL yang relevan, sehingga mempermudah pengelolaan database.
+URL POSTMAN -> https://drive.google.com/drive/folders/1Lvs748AmCG43wxLcCzoZE7LNp77wND8P?usp=sharing
