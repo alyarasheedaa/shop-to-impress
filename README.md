@@ -1,30 +1,32 @@
 http://alya-rasheeda-shoptoimpress.pbp.cs.ui.ac.id
 
-<!-- Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform? -->
-    - Data delivery penting untuk memastikan pertukaran informasi antara server dan client berjalan lancar dan sesuai format yang diharapkan. Ini mendukung fungsionalitas platform secara efisien.
+<!-- Apa perbedaan antara HttpResponseRedirect() dan redirect() -->
+    - HttpResponseRedirect() digunakan untuk mengembalikan response redirect secara manual dengan URL spesifik.
+    - redirect() adalah shortcut yang menggabungkan HttpResponseRedirect() dengan reverse() untuk mengarahkan URL berdasarkan view name, sehingga lebih ringkas.
 
-<!-- Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML? -->
-    - JSON lebih baik karena lebih ringan, mudah dibaca, dan cepat diproses. JSON lebih populer dibandingkan XML karena strukturnya sederhana, cocok untuk API modern, dan lebih mendukung aplikasi web.
+<!-- Jelaskan cara kerja penghubungan model Product dengan User! -->
+    - Model Product menggunakan relasi ForeignKey untuk menghubungkan setiap produk dengan pengguna (user). Pada ForeignKey, kita menghubungkan Product dengan model User, sehingga setiap produk terkait dengan satu pengguna.
 
-<!-- Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut? -->
-    - Method ini digunakan untuk memeriksa apakah data yang diinput ke dalam form sesuai dengan aturan validasi yang ditetapkan. Kita butuh method ini agar bisa memastikan data yang diterima form sudah valid sebelum diproses lebih lanjut, misalnya disimpan ke database.
+<!-- Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut. -->
+    - Authentication: Memverifikasi identitas pengguna (siapa dia), biasanya saat login.
+    - Authorization: Menentukan hak akses (apa yang boleh dilakukan pengguna).
+    - Django menggunakan authenticate() untuk validasi identitas dan login() untuk autentikasi sesi. Setelah login, Django memanfaatkan middleware untuk mengelola sesi pengguna.
 
-<!-- Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang? -->
-    - csrf_token melindungi dari serangan CSRF. Tanpa token ini, penyerang bisa mengirim permintaan berbahaya atas nama pengguna. Token memastikan permintaan berasal dari sumber yang sah.
+<!-- Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan? -->
+    - Django menggunakan sesi dan cookie. Setelah login, cookie dengan sessionid disimpan pada browser klien, yang memungkinkan server mengingat pengguna setiap kali ada request.
+    - Kegunaan lain cookies termasuk menyimpan preferensi atau tracking user behavior, tapi tidak semua cookies aman jika tidak dienkripsi atau disalahgunakan.
 
 <!-- Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial). -->
-    - Buat file forms.py di dalam direktori main untuk membuat form input data menggunakan ModelForm. Tambahkan form yang menghubungkan ke model yang sudah ada, yaitu MoodEntry.
+    - Registrasi, Login, Logout:
+    Implementasikan UserCreationForm untuk registrasi, AuthenticationForm untuk login, dan logout() untuk menghapus sesi.
+    
+    - Buat Dua Akun Pengguna dan Dummy Data:
+    Daftarkan dua akun pengguna dan buat tiga dummy data Product untuk masing-masing akun.
+    
+    - Menghubungkan Product dengan User:
+    Gunakan ForeignKey(User) pada model Product untuk menghubungkan setiap produk dengan pengguna.
+    
+    - Menampilkan Detail Pengguna dan last_login:
+    Tambahkan {{ request.user.username }} untuk menampilkan username yang sedang login dan tampilkan last_login dengan menggunakan cookie di halaman utama.
 
-    - Di views.py, buat dua view baru: show_xml dan show_json untuk menampilkan semua data MoodEntry dalam format XML dan JSON menggunakan serializers. Untuk ID-based views, tambahkan dua view lagi: show_xml_by_id dan show_json_by_id. Ini memungkinkan pengambilan data berdasarkan ID spesifik dari database.
-
-    - Tambahkan URL pattern di urls.py untuk setiap view baru agar setiap endpoint akan terhubung ke view yang sesuai.
-
-    - Mengakses URL menggunakan Postman: Uji keempat URL yang sudah diimplementasi menggunakan Postman.
-
-    - Add-commit-push ke GitHub: 
-    git add .
-    git commit -m "tugas 3"
-    git push origin main
-    Pastikan semua perubahan sudah ter-push.
- 
-URL POSTMAN -> https://drive.google.com/drive/folders/1Lvs748AmCG43wxLcCzoZE7LNp77wND8P?usp=sharing
+    - Gunakan git add ., git commit -m "<>", dan git push ke repository GitHub.
