@@ -4,4 +4,4 @@ from main.models import MoodEntry
 class MoodEntryForm(ModelForm):
     class Meta:
         model = MoodEntry
-        fields = ["name", "price", "description"]
+        fields = ["product", "price", "description"]
