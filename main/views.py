@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from main.forms import MoodEntryForm
 from main.models import MoodEntry
 from django.http import HttpResponse
@@ -20,7 +20,6 @@ def show_main(request):
 
     context = {
         'nama': request.user.username,
-        'kelas' : 'PBP B',
         'product' : 'Blazer',
         'price' : '2000000',
         'description' : 'Pink',
@@ -31,13 +30,15 @@ def show_main(request):
     return render(request, "main.html", context)
 
 def create_mood_entry(request):
-    form = MoodEntryForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        mood_entry = form.save(commit=False)
-        mood_entry.user = request.user
-        mood_entry.save()
-        return redirect('main:show_main')
+    if request.method == "POST":
+        form = MoodEntryForm(request.POST)  # No need for request.FILES, since we're using URLs
+        if form.is_valid():
+            mood_entry = form.save(commit=False)
+            mood_entry.user = request.user
+            mood_entry.save()  # Save the mood entry with the image URL
+            return redirect('main:show_main')
+    else:
+        form = MoodEntryForm()
 
     context = {'form': form}
     return render(request, "create_mood_entry.html", context)
@@ -91,3 +92,22 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def edit_mood(request, id):
+    mood = MoodEntry.objects.get(pk=id)
+
+    form = MoodEntryForm(request.POST or None, request.FILES or None, instance=mood)  # Handle file uploads
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_mood.html", context)
+
+
+def delete_mood(request, id):
+    mood = MoodEntry.objects.get(pk = id)
+    mood.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
+    

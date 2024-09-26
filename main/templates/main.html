@@ -1,55 +1,64 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Shop to Impress</title>
+{% endblock meta %}
+
 {% block content %}
-<h1>Shop to Impress</h1>
+{% include 'navbar.html' %}
 
-<h5>Nama: </h5>
-<p>{{ nama }}<p>
+<!-- Hero Section (Full Width) -->
+<div class="bg-gradient-to-r from-pink-300 via-red-200 to-pink-300 py-12 shadow-lg mb-12">
+  <div class="container mx-auto text-center">
+    <h1 class="text-4xl font-bold text-gray-800">Welcome to Shop to Impress!</h1>
+    <p class="text-gray-600 mt-4 text-xl">Find the best products curated just for you!</p>
+    <!-- Button scrolls to the products section -->
+    <a href="#products" class="mt-8 inline-block bg-red-600 text-white py-3 px-8 rounded-full text-lg hover:bg-red-700 transition duration-300 ease-in-out">
+      Explore Products
+    </a>
+  </div>
+</div>
 
-<h5>Kelas:</h5>
-<p>{{ kelas }}</p>
+<!-- Main Content -->
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-12 min-h-screen bg-gray-100 flex flex-col">
+  <div class="p-2 mb-6 relative">
+    <!-- Add New Product Button -->
+    <div class="flex justify-end mb-6">
+      <a href="{% url 'main:create_mood_entry' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+        Add New Product
+      </a>
+    </div>
+    
+    <!-- Mood Entries Section -->
+    {% if not mood_entries %}
+    <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+      <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-32 h-32 mb-4"/>
+      <p class="text-center text-gray-600 mt-4">Product data not found.</p>
+    </div>
+    {% else %}
+    <!-- Add the id="products" to the mood entries section -->
+    <div id="products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for mood_entry in mood_entries %}
+        {% include 'card_mood.html' with mood_entry=mood_entry %}
+      {% endfor %}
+    </div>  
+    {% endif %}
+  </div>
 
-<h5>Name:</h5>
-<p>{{ product }}</p>
+  <!-- Last login and action buttons -->
+  <div class="px-3 mb-4">
+    <div class="flex rounded-md items-center bg-red-600 py-2 px-4 w-fit">
+      <h1 class="text-white text-center">Last Login: {{ last_login }}</h1>
+    </div>
+  </div>
+</div>
 
-<h5>Price:</h5>
-<p>{{ price }}</p>
-
-<h5>Description:</h5>
-<p>{{ description }}</p>
-
-{% if not mood_entries %}
-<p>Belum ada data product pada shop to impress.</p>
-{% else %}
-<table>
-  <tr>
-    <th>Product</th>
-    <th>Time</th>
-    <th>Price</th>
-    <th>Description</th>
-  </tr>
-
-  {% comment %} Berikut cara memperlihatkan data product di bawah baris ini 
-  {% endcomment %} 
-  {% for mood_entry in mood_entries %}
-  <tr>
-    <td>{{mood_entry.product}}</td>
-    <td>{{mood_entry.time}}</td>
-    <td>{{mood_entry.price}}</td>
-    <td>{{mood_entry.description}}</td>
-  </tr>
-  {% endfor %}
-</table>
-{% endif %}
-
-<br />
-
-<a href="{% url 'main:create_mood_entry' %}">
-  <button>Add New Product</button>
-</a>
-
-<a href="{% url 'main:logout' %}">
-  <button>Logout</button>
-  <h5>Sesi terakhir login: {{ last_login }}</h5>
-</a>
+<!-- Smooth scroll behavior -->
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
 
 {% endblock content %}

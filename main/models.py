@@ -9,3 +9,7 @@ class MoodEntry(models.Model):
     time = models.DateField(auto_now_add=True)
     price = models.IntegerField()
     description = models.TextField()
+    image_url = models.URLField(blank=True, null=True)  # Store the image URL
+
+    def __str__(self):
+        return self.product
