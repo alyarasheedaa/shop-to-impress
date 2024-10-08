@@ -82,3 +82,27 @@ http://alya-rasheeda-shoptoimpress.pbp.cs.ui.ac.id
 
     - Navigation Bar Responsive  
         - Buat navbar yang responsif menggunakan Tailwind. Gunakan class seperti `flex`, `justify-between`, dan `md:hidden` untuk membuat navbar terlihat rapi di mobile dan desktop.
+
+**=================================== TUGAS 6 ===================================**
+
+1. Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+- JavaScript memungkinkan pengembangan web menjadi lebih interaktif dan dinamis. Dengan JavaScript, kita bisa memanipulasi elemen HTML dan CSS secara langsung tanpa perlu memuat ulang halaman. Ini memungkinkan pengalaman pengguna yang lebih baik, seperti validasi form di sisi pengguna, update data secara real-time tanpa refresh (dengan AJAX), dan peningkatan visual interaktif.
+
+2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+- await digunakan untuk menunggu hasil dari operasi asynchronous seperti fetch(). Dengan await, JavaScript akan menunggu hingga fetch() selesai dan mengembalikan hasilnya sebelum melanjutkan eksekusi kode berikutnya. Jika await tidak digunakan, kode setelah fetch() akan dijalankan tanpa menunggu hasilnya, sehingga kita mungkin mencoba mengakses data yang belum tersedia (belum dikembalikan oleh server).
+
+3. Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+- Decorator csrf_exempt digunakan untuk menonaktifkan pengecekan CSRF token pada view tertentu yang menggunakan metode POST, khususnya ketika kita mengirimkan request AJAX yang mungkin tidak menyertakan CSRF token. Tanpa pengecualian ini, permintaan POST akan ditolak oleh Django karena dianggap berbahaya (potensi serangan CSRF).
+
+4. Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+- Pembersihan data input di backend dilakukan untuk menghindari manipulasi atau serangan berbahaya dari pengguna. Validasi di frontend hanya mencegah kesalahan yang terlihat oleh pengguna biasa, tetapi input tetap bisa dimanipulasi melalui alat developer di browser. Oleh karena itu, backend harus selalu memvalidasi dan membersihkan data untuk memastikan keamanan dan konsistensi data.
+
+5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+    **Tambahkan error message pada login**: Modifikasi view `login_user` untuk menampilkan pesan error jika username atau password salah.
+    **Buat fungsi untuk menambahkan product dengan AJAX**: Tambahkan view di backend yang menerima data dari POST request menggunakan `csrf_exempt` dan `require_POST`.
+    **Tambahkan routing untuk fungsi AJAX**: Pastikan URL untuk fungsi yang baru dibuat dapat diakses melalui routing.
+    **Tampilkan data product dengan fetch() API**: Buat fungsi di frontend yang menggunakan fetch untuk mengambil data product secara asynchronous dan menampilkannya di halaman tanpa reload.
+    **Refresh data product secara asinkron**: Tambahkan fungsi untuk memperbarui tampilan data product setelah data baru ditambahkan, dengan mengosongkan container lama dan mengisinya dengan data yang baru.
+    **Implementasikan modal form untuk menambahkan data product**: Tambahkan modal di HTML yang bisa digunakan untuk menambahkan product entry secara asinkron.
+    **Tambahkan validasi terhadap XSS**: Lakukan pembersihan data di backend dengan menggunakan `strip_tags` sebelum data disimpan di database.
+    **Bersihkan data lama dengan DOMPurify**: Gunakan library DOMPurify di frontend untuk memastikan data yang lama juga terlindungi dari XSS saat ditampilkan di halaman web.

@@ -12,24 +12,27 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
 
 # Create your views here.
 @login_required(login_url='/login')
 def show_main(request):
-    mood_entries = MoodEntry.objects.filter(user=request.user)
 
     context = {
         'nama': request.user.username,
         'product' : 'Blazer',
         'price' : '2000000',
         'description' : 'Pink',
-        'mood_entries': mood_entries,
         'last_login': request.COOKIES['last_login'],
     }
 
     return render(request, "main.html", context)
 
 def create_mood_entry(request):
+    form = MoodEntryForm()
+
     if request.method == "POST":
         form = MoodEntryForm(request.POST)  # No need for request.FILES, since we're using URLs
         if form.is_valid():
@@ -44,11 +47,11 @@ def create_mood_entry(request):
     return render(request, "create_mood_entry.html", context)
 
 def show_xml(request):
-    data = MoodEntry.objects.all()
+    data = MoodEntry.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
 def show_json(request):
-    data = MoodEntry.objects.all()
+    data = MoodEntry.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def show_xml_by_id(request, id):
@@ -81,6 +84,8 @@ def login_user(request):
             response = HttpResponseRedirect(reverse("main:show_main"))
             response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
+        else:
+            messages.error(request, "Invalid username or password. Please try again.")
 
    else:
       form = AuthenticationForm(request)
@@ -94,9 +99,9 @@ def logout_user(request):
     return response
 
 def edit_mood(request, id):
-    mood = MoodEntry.objects.get(pk=id)
+    product = MoodEntry.objects.get(pk=id)
 
-    form = MoodEntryForm(request.POST or None, request.FILES or None, instance=mood)  # Handle file uploads
+    form = MoodEntryForm(request.POST or None, request.FILES or None, instance=product)  # Handle file uploads
 
     if form.is_valid() and request.method == "POST":
         form.save()
@@ -107,7 +112,27 @@ def edit_mood(request, id):
 
 
 def delete_mood(request, id):
-    mood = MoodEntry.objects.get(pk = id)
-    mood.delete()
+    product = MoodEntry.objects.get(pk = id)
+    product.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
     
+@csrf_exempt
+@require_POST
+def add_mood_entry_ajax(request):
+    product = strip_tags(request.POST.get("product"))
+    description = strip_tags(request.POST.get("description"))
+    price = request.POST.get("price")
+    image_url = strip_tags(request.POST.get("image_url"))  # Handle image_url
+
+    user = request.user
+
+    new_mood = MoodEntry(
+        product=product,
+        description=description,
+        price=price,
+        image_url=image_url,  # Save image_url
+        user=user
+    )
+    new_mood.save()
+
+    return HttpResponse(b"CREATED", status=201)
