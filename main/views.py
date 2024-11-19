@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+from django.http import JsonResponse
 
 # Create your views here.
 @login_required(login_url='/login')
@@ -25,7 +27,7 @@ def show_main(request):
         'product' : 'Blazer',
         'price' : '2000000',
         'description' : 'Pink',
-        'last_login': request.COOKIES['last_login'],
+        'last_login': request.COOKIES.get('last_login', 'Belum login'),
     }
 
     return render(request, "main.html", context)
@@ -116,6 +118,7 @@ def delete_mood(request, id):
     product.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
     
+
 @csrf_exempt
 @require_POST
 def add_mood_entry_ajax(request):
@@ -135,4 +138,31 @@ def add_mood_entry_ajax(request):
     )
     new_mood.save()
 
-    return HttpResponse(b"CREATED", status=201)
+    return JsonResponse({
+        "status": "CREATED",
+        "message": "Product added successfully!",
+        "data": {
+            "product": product,
+            "description": description,
+            "price": price,
+            "image_url": image_url,
+        }
+    })
+
+@csrf_exempt
+def create_mood_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_product = MoodEntry.objects.create(
+            user=request.user,
+            product=data["product"],
+            price=int(data["amount"]),
+            description=data["description"]
+        )
+
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
